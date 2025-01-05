@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useQuery } from '@tanstack/react-query';
+import axios, { AxiosResponse } from 'axios';
+import { Activity, ActivityResponse } from './types';
+import BasicTable from './components/BasicTable';
 
-function App() {
-  const [count, setCount] = useState(0)
+const now = new Date();
+const today = now.getDay();
+const comingSaturday = new Date(now);
+comingSaturday.setDate(now.getDate() + ((6 - today + 7) % 7));
+comingSaturday.setHours(8, 0, 0, 0); // Start time: 8:00 AM
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Calculate the date for the next Friday
+const nextFriday = new Date(comingSaturday);
+nextFriday.setDate(comingSaturday.getDate() + 6);
+nextFriday.setHours(17, 0, 0, 0); // End time: 5:00 PM
+
+function getRandomDate(start: Date, end: Date) {
+  const randomTime =
+    start.getTime() + Math.random() * (end.getTime() - start.getTime());
+  const randomDate = new Date(randomTime);
+  randomDate.setHours(8 + Math.floor(Math.random() * 16)); // Random hour between 8 and 23
+  randomDate.setMinutes(0); // Random minutes
+  randomDate.setSeconds(0, 0);
+  return randomDate;
 }
 
-export default App
+function App() {
+  const { isLoading, error, data, isFetching } = useQuery({
+    queryKey: ['activities'],
+    queryFn: () =>
+      axios
+        .get('https://jsonplaceholder.typicode.com/posts')
+        .then((res: AxiosResponse<ActivityResponse[]>) => res.data),
+    select: (activities): Activity[] =>
+      activities.map(activity => {
+        const date = new Date(getRandomDate(comingSaturday, nextFriday));
+
+        return {
+          ...activity,
+          date,
+        };
+      }),
+  });
+
+  if (isLoading || isFetching)
+    return (
+      <div className="w-screen h-screen flex items-center justify-center text-lg font-bold">
+        درحال دریافت اطلاعات ...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="w-screen h-screen bg-red-500 flex items-center justify-center text-lg font-bold text-white">
+        خطا در دریافت اطالاعات
+      </div>
+    );
+
+  return (
+    <div className="w-full bg-slate-950 h-screen min-h-[800px]">
+      {data && <BasicTable startDate={comingSaturday} activities={data} />}
+    </div>
+  );
+}
+
+export default App;
