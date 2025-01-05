@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
 import { Activity, ActivityResponse } from './types';
-import BasicTable from './components/BasicTable';
+import ActivitiesTable from './components/ActivitiesTable';
 
 const now = new Date();
 const today = now.getDay();
@@ -57,8 +57,8 @@ function App() {
     );
 
   return (
-    <div className="w-full bg-slate-950 h-screen min-h-[800px]">
-      {data && <BasicTable startDate={comingSaturday} activities={data} />}
+    <div className="w-screen overflow-x-auto bg-slate-950 h-screen min-h-[800px]">
+      {data && <ActivitiesTable startDate={comingSaturday} activities={data} />}
     </div>
   );
 }

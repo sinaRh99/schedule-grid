@@ -7,7 +7,7 @@ interface PropTypes {
   activities: Activity[];
 }
 
-export default function BasicTable({ startDate, activities }: PropTypes) {
+export default function ActivitiesTable({ startDate, activities }: PropTypes) {
   const [sortOption, setSortOption] = useState<'ASC' | 'DESC'>('ASC');
 
   const weekdays = useMemo(() => {
@@ -65,7 +65,7 @@ export default function BasicTable({ startDate, activities }: PropTypes) {
   }, [weekdays, activitiesMap, sortOption]);
 
   return (
-    <div className="relative overflow-x-auto h-full">
+    <div className="relative overflow-x-auto h-full w-full min-w-[1000px]">
       <table className="w-full h-full text-sm text-right text-slate-700">
         <thead className="text-xs text-slate-50 bg-slate-700">
           <tr>
@@ -78,16 +78,7 @@ export default function BasicTable({ startDate, activities }: PropTypes) {
             >
               <div className="flex gap-4 items-center">
                 ساعت
-                <svg
-                  className="w-3 h-3 ms-1.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  color="#fff"
-                >
-                  <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                </svg>
+                <SortIcon></SortIcon>
               </div>
             </th>
             {weekdays.map(day => (
@@ -117,5 +108,20 @@ export default function BasicTable({ startDate, activities }: PropTypes) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function SortIcon() {
+  return (
+    <svg
+      className="w-3 h-3 ms-1.5"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      color="#fff"
+    >
+      <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
+    </svg>
   );
 }
