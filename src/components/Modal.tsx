@@ -20,7 +20,7 @@ function Wrapper({ children, onClose, isOpen }: PropTypes) {
         className="absolute top-0 left-0 w-full h-full bg-black/80"
         onClick={handleModalClose}
       ></div>
-      <div className="bg-white w-[600px]  h-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md p-10">
+      <div className="bg-white w-[600px] max-h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md p-10 overflow-y-scroll">
         {children}
       </div>
     </div>

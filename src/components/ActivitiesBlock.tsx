@@ -18,6 +18,14 @@ export default function ActivitiesBlock({ activities }: PropTypes) {
     return title;
   }, [activities]);
 
+  const dateTimeFormatter = new Intl.DateTimeFormat('fa-IR', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    calendar: 'persian',
+  });
+
   return (
     <div
       className="w-full h-full bg-sky-600 hover:bg-sky-800 text-black font-medium flex items-center justify-center cursor-pointer relative"
@@ -30,7 +38,18 @@ export default function ActivitiesBlock({ activities }: PropTypes) {
         </div>
       )}
       <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen}>
-        dsdsd
+        <div className="text-sky-600 text-4xl">
+          {dateTimeFormatter.format(activities[0].date)}
+        </div>
+        {activities.map(activity => (
+          <div
+            key={activity.id}
+            className="p-4 mt-8 border-t border-dashed border-slate-500"
+          >
+            <div className="font-bold text-lg mb-2">{activity.title}</div>
+            <div>{activity.body}</div>
+          </div>
+        ))}
       </Modal>
     </div>
   );
